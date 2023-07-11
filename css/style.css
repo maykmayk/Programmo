@@ -1,0 +1,50 @@
+textarea {
+    resize: none;
+    width: 100%;
+ }
+
+.container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.alt{
+    color: #000;
+    font-size: 30px;
+}
+
+.btn {
+    padding: 10px 15px;
+    background-color: #000;
+    color: #fff;
+    
+}
+
+.btnStart {
+    background-color: #23C552;
+}
+
+.btnStop {
+    background-color: #F84F31;
+}
+
+.success {
+    color: #23C552;
+}
+
+.fail {
+    color: #F84F31;
+}
+
+.results{
+    padding: 10px 15px;
+    background-color: #000;
+    color: #fff;
+    border-radius: 10px;
+}
+
+#quoteToCopy{
+    font-size: 20px
+}
