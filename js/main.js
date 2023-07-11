@@ -3,7 +3,7 @@ const _app = {}
 _app.fetching = async () => {
     let quote = "";
     let quoteCont = document.getElementById("quoteToCopy")
-    const quoteApiUrl = "https://api.quotable.io/random?language=it?minLength=80&maxLength=100";
+    const quoteApiUrl = "https://api.quotable.io/random?minLength=80&maxLength=100";
     const response = await fetch(quoteApiUrl);
     let data = await response.json();
     quote = data.content;
