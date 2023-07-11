@@ -48,3 +48,11 @@ textarea {
 #quoteToCopy{
     font-size: 20px
 }
+
+.pointer{
+    height: 18px;
+    width: 2px;
+    background-color: rgb(201, 228, 63);
+    margin-top: 6px;
+    margin-left: 3px;
+}

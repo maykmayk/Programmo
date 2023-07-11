@@ -2,17 +2,26 @@ const _app = {}
 
 _app.fetching = async () => {
     let quote = "";
-    let quoteCont = document.getElementById("quoteToCopy")
+    const quoteCont = document.getElementById("quoteToCopy");
     const quoteApiUrl = "https://api.quotable.io/random?minLength=80&maxLength=100";
-    const response = await fetch(quoteApiUrl);
-    let data = await response.json();
-    quote = data.content;
-
-    //Array of chars in quote
-    let arr = quote.split("").map((value) => {
-        return "<span class='quote-chars'>" + value + "</span>";
+    
+    fetch(quoteApiUrl)
+        .then(response => response.json())
+        .then(async data => {
+            const sourceText = data.content;
+            const targetLanguage = "it"; 
+            const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLanguage}&dt=t&q=${encodeURI(sourceText)}`);
+            const translatedData = await response.json();
+            const translatedText = translatedData[0][0][0];
+            console.log(translatedText);
+            quote = translatedText;
+        
+            // Array of chars in quote
+            const arr = quote.split("").map((value) => {
+            return "<span class='quote-chars'>" + value + "</span>";
+            });
+            quoteCont.innerHTML += arr.join("");
     });
-    quoteCont.innerHTML += arr.join("");
 };
 
 _app.checking = () => {
@@ -70,6 +79,7 @@ _app.startUp = () => {
     _app.timetaken = []
 
     btnStart.addEventListener('click', () => {
+        textArea.focus();
         errors.textContent = '0';
         timerDiv.textContent = '0s';
         quoteCont.innerHTML = ""
@@ -94,22 +104,6 @@ _app.startUp = () => {
         btnStop.classList.remove('d-none');
     });
 
-    if(_app.end) {
-        clearInterval(timer);
-        results.classList.add('d-flex');
-        results.classList.remove('d-none');
-        btnStart.classList.remove('d-none');
-        btnStart.classList.add('d-flex');
-        btnStop.classList.remove('d-flex');
-        btnStop.classList.add('d-none');
-        let timeTaken = 1;
-        if (time != 0) {
-            timeTaken = (60 - time) / 100;
-        }
-        document.getElementById("wpm").innerText = (_app.userInput.value.length / 5 / timeTaken).toFixed(2) + "wpm";
-        document.getElementById("accuracy").innerText = Math.round(((_app.userInput.value.length - _app.mistakes) / _app.userInput.value.length) * 100) + "% accuracy";
-    }
-
     btnStop.addEventListener('click', () => {
         clearInterval(timer);
         results.classList.add('d-flex');
@@ -125,6 +119,47 @@ _app.startUp = () => {
         document.getElementById("wpm").innerText = (_app.userInput.value.length / 5 /  timeTaken).toFixed(2) + "wpm";
         document.getElementById("accuracy").innerText = Math.round(((_app.userInput.value.length - _app.mistakes) / _app.userInput.value.length) * 100) + "% accuracy";
     });
+
+    document.addEventListener("keyup", function(event) {
+        if (event.code === 'Enter') {  
+            clearInterval(timer);
+            results.classList.add('d-flex');
+            results.classList.remove('d-none');
+            btnStart.classList.remove('d-none');
+            btnStart.classList.add('d-flex');
+            btnStop.classList.remove('d-flex');
+            btnStop.classList.add('d-none');
+            let timeTaken = 1;
+            if (time != 0) {
+                timeTaken = (60 - time) / 100;
+            }
+            document.getElementById("wpm").innerText = (_app.userInput.value.length / 5 /  timeTaken).toFixed(2) + "wpm";
+            document.getElementById("accuracy").innerText = Math.round(((_app.userInput.value.length - _app.mistakes) / _app.userInput.value.length) * 100) + "% accuracy";
+        }
+    });
 }
+
+// _app.end = () => {
+//     const btnStart = document.getElementById('startBtn');
+//     const btnStop = document.getElementById('stopBtn');
+//     const results = document.getElementById('results');
+//     let timer;
+//     let time;
+//     _app.timetaken = []
+
+//     clearInterval(timer);
+//     results.classList.add('d-flex');
+//     results.classList.remove('d-none');
+//     btnStart.classList.remove('d-none');
+//     btnStart.classList.add('d-flex');
+//     btnStop.classList.remove('d-flex');
+//     btnStop.classList.add('d-none');
+//     let timeTaken = 1;
+//     if (time != 0) {
+//         timeTaken = (60 - time) / 100;
+//     }
+//     document.getElementById("wpm").innerText = (_app.userInput.value.length / 5 /  timeTaken).toFixed(2) + "wpm";
+//     document.getElementById("accuracy").innerText = Math.round(((_app.userInput.value.length - _app.mistakes) / _app.userInput.value.length) * 100) + "% accuracy";
+// }
 
 _app.startUp()
